@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">05_PictureFrame</string>
+    <string name="execute">전자액자 실행하기</string>
+    <string name="add">사진 추가하기</string>
+</resources>
