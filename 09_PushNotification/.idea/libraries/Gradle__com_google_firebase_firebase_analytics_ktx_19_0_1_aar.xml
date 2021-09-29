@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: com.google.firebase:firebase-analytics-ktx:19.0.1@aar">
+    <CLASSES>
+      <root url="jar://D:/Android_AVD_Gradle/.gradle/caches/transforms-2/files-2.1/e81181c96a9066c6619a0358ab470208/jetified-firebase-analytics-ktx-19.0.1/jars/classes.jar!/" />
+      <root url="file://D:/Android_AVD_Gradle/.gradle/caches/transforms-2/files-2.1/e81181c96a9066c6619a0358ab470208/jetified-firebase-analytics-ktx-19.0.1/res" />
+      <root url="file://D:/Android_AVD_Gradle/.gradle/caches/transforms-2/files-2.1/e81181c96a9066c6619a0358ab470208/jetified-firebase-analytics-ktx-19.0.1/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://D:/Android_AVD_Gradle/.gradle/caches/modules-2/files-2.1/com.google.firebase/firebase-analytics-ktx/19.0.1/d1e51f04a4e0b3df1cf1e84e95c5aa758e6ad905/firebase-analytics-ktx-19.0.1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES />
+  </library>
+</component>
