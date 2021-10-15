@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity() {
 
         initFirebase()
 
+
     }
     private fun initFirebase(){
         FirebaseMessaging.getInstance().token

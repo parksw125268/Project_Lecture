@@ -9,6 +9,7 @@ class MyFireBaseMessagingService :FirebaseMessagingService() {
         super.onNewToken(p0)
     }
 
+
     override fun onMessageReceived(message: RemoteMessage) { //message를 수신하면 발생됨. 여기서 메세지를 처리.
         super.onMessageReceived(message)
     }
