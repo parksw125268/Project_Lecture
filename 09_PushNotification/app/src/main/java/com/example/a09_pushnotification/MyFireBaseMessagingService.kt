@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -71,6 +72,18 @@ class MyFireBaseMessagingService :FirebaseMessagingService() {
                 )
             }
             NotificationType.CUSTOM -> {
+                notificationBuilder
+                        .setStyle(NotificationCompat.DecoratedCustomViewStyle())
+                        .setCustomContentView(
+                                RemoteViews(
+                                        packageName,
+                                        R.layout.view_custom_notification
+                                ).apply { //title과 메세지 지정하기
+                                    setTextViewText(R.id.title, title) // 뒤의 타이틀은 위에서 선언한것으로 파이어 베이스의 타이틀
+                                    setTextViewText(R.id.message, message)
+
+                                }
+                        )
             }
         }
         return notificationBuilder.build()
