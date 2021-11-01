@@ -3,7 +3,10 @@ package com.example.a09_pushnotification
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
@@ -50,11 +53,20 @@ class MyFireBaseMessagingService :FirebaseMessagingService() {
         }
     }
     private fun createNotification(type:NotificationType, title: String?, message : String?): Notification {
+         val intent = Intent(this, MainActivity::class.java).apply {
+            putExtra("notificationType","${type.title} 타입")
+            addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)//인텐트를 create하면 스택으로 쌓이는데 그게 아니라 같은 것이면 OnNewIntent메서드를 이용해서 재활용한다.
+         }
+         //PendingIntent : 누군가(NotificationManager)에게 intent 룰 줄때
+         val pendingIntent = PendingIntent.getActivity(this, type.id, intent, FLAG_UPDATE_CURRENT)
+
          val notificationBuilder =  NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_notification)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)//안드로이드 8 oreo 버전 이하를 위해.
+                 .setContentIntent(pendingIntent)
+                 .setAutoCancel(true)//클릭하면 notification이 사라지도록
 
         when(type){
             NotificationType.NOMAL -> Unit
