@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "728646270725",
+    "project_id": "dailyquote-d4b16",
+    "storage_bucket": "dailyquote-d4b16.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:728646270725:android:2640940985dfc68180c16c",
+        "android_client_info": {
+          "package_name": "com.kotlin.a10_daliyquote"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "728646270725-kj4nv3pp4ntiuh9q5rjglugv0nj18m5k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFJmFLluDxqLD1Fn54EUiFjvFSlyCpNjk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "728646270725-kj4nv3pp4ntiuh9q5rjglugv0nj18m5k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
