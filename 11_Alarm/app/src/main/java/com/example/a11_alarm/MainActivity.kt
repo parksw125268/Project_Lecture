@@ -1,9 +1,12 @@
 package com.example.a11_alarm
 
+import android.annotation.SuppressLint
 import android.app.TimePickerDialog
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import androidx.core.content.edit
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -11,12 +14,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //step0 뷰를 초기화 해주기
         initOnOffButton()
         initChangeAlarmTimeButton()
-        //step1 데이터 가져오기
-        //step2 가져온 데이터를 view에 그려주기
-        //step3
+
+        val model = fetchDataFromSharedPreference() //데이터 가져오기
+      //  renderView(model) //가져온 데이터 view에 그려주기
     }
     private fun initOnOffButton(){
         val onOffButton = findViewById<Button>(R.id.onOffButton)
@@ -57,6 +59,27 @@ class MainActivity : AppCompatActivity() {
             minute = minute,
             onOff = false
         )
+        val sharedPreference = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+
+        with(sharedPreference.edit()){
+            putString(ALARM_KEY, model.makeDataForDB()) //데이터 저장
+            putBoolean(ONOFF_KEY, model.onOff)
+            commit()
+        }
+
         return model
+    }
+    private fun fetchDataFromSharedPreference():AlarmDisplayModel{
+        val sharedPreference = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+        val tiemDBValue = sharedPreference.getString(ALARM_KEY,"9:30") ?: "9:30" //데이터 가져오기(없거나 null이면 "9:30")
+        val onOffDBValue = sharedPreference.getBoolean(ONOFF_KEY,false)
+        val alramDAta = tiemDBValue.split(":")
+
+        return AlarmDisplayModel(1,2,false)
+    }
+    companion object{
+        private const val SHARED_PREFERENCES_NAME = "time"
+        private const val ALARM_KEY = "alarm"
+        private const val ONOFF_KEY = "onOff"
     }
 }

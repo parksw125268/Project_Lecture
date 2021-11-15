@@ -16,4 +16,7 @@ data class AlarmDisplayModel(
         get() {
             return if (hour < 12) "AM" else "PM"
         }
+    fun makeDataForDB():String{
+        return "$hour:$minute"
+    }
 }
