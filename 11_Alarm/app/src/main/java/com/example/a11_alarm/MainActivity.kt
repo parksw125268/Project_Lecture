@@ -1,11 +1,14 @@
 package com.example.a11_alarm
 
 import android.annotation.SuppressLint
+import android.app.PendingIntent
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.TextView
 import androidx.core.content.edit
 import java.util.*
 
@@ -18,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         initChangeAlarmTimeButton()
 
         val model = fetchDataFromSharedPreference() //데이터 가져오기
-      //  renderView(model) //가져온 데이터 view에 그려주기
+        renderView(model) //가져온 데이터 view에 그려주기
     }
     private fun initOnOffButton(){
         val onOffButton = findViewById<Button>(R.id.onOffButton)
@@ -40,8 +43,13 @@ class MainActivity : AppCompatActivity() {
             //Time다이얼로그 띄워서 시간 지정후 종료할때 작업해주기
             TimePickerDialog(this,
                 { picker, hour, minute -> //타임을 지정하고 나올때 발생하는 이벤트 람다.
-                    //1.데이터를 저장하고 2.View를 업데이트하고 3.기존에 있던 알람을 삭제하고
+                    //1.데이터를 저장하고
                     val model = saveAlarmModel(hour, minute, false)
+
+                    //2.View를 업데이트하고
+                    renderView(model)
+
+                    //3.기존에 있던 알람을 삭제하고
                 },
                 calender.get(Calendar.HOUR_OF_DAY) ,
                 calender.get(Calendar.MINUTE),
@@ -73,13 +81,45 @@ class MainActivity : AppCompatActivity() {
         val sharedPreference = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
         val tiemDBValue = sharedPreference.getString(ALARM_KEY,"9:30") ?: "9:30" //데이터 가져오기(없거나 null이면 "9:30")
         val onOffDBValue = sharedPreference.getBoolean(ONOFF_KEY,false)
-        val alramDAta = tiemDBValue.split(":")
+        val alramData = tiemDBValue.split(":")
 
-        return AlarmDisplayModel(1,2,false)
+        val  alarmModel = AlarmDisplayModel(
+            hour = alramData[0].toInt(),
+            minute =  alramData[1].toInt(),
+            onOff = onOffDBValue  )
+
+        //데이터 보정.
+       /* val pendingIntent = PendingIntent.getBroadcast(
+            this,
+            ALARM_REQUEST_CODE,         //만들거임.                 //있으면 가져오고 없으면 안가져온다.
+            Intent(this, AlarmReceiver::class.java), PendingIntent.FLAG_NO_CREATE)
+
+        if ((pendingIntent == null ) and alarmModel.onOff ){
+            //알람이 등록되어있지 않은데 알람은 model에는 켜져있다고 되어있는 경우 '
+            alarmModel.onOff = false
+        }else if((pendingIntent != null) and  alarmModel.onOff.not()){
+            //알람은 등록되어있는데 알람데이터는 꺼져있음.-> 알람을 취소함.
+            pendingIntent.cancel()
+        }*/
+        return alarmModel
     }
+    private fun renderView(model: AlarmDisplayModel){
+        findViewById<TextView>(R.id.ampmTextView).apply{
+            text = model.ampmText
+        }
+        findViewById<TextView>(R.id.timeTextView).apply{
+            text = model.timeText
+        }
+        findViewById<Button>(R.id.onOffButton).apply{
+            text = model.onOffText
+            tag = model //테그에는 아무거나 넣어놓을 수 있음.
+        }
+    }
+
     companion object{
         private const val SHARED_PREFERENCES_NAME = "time"
         private const val ALARM_KEY = "alarm"
         private const val ONOFF_KEY = "onOff"
+        private const val ALARM_REQUEST_CODE = 1000;
     }
 }
