@@ -26,12 +26,31 @@ class MainActivity : AppCompatActivity() {
     private fun initOnOffButton(){
         val onOffButton = findViewById<Button>(R.id.onOffButton)
         onOffButton.setOnClickListener {
-            // 데이터를 확인한다.
-            // 온 오프에 따라 작업을 처리한다.
-            // 온 -> 알람 등록
-            // 오프 -> 알람제거
-        }
+            val model = it.tag as? AlarmDisplayModel ?: return@setOnClickListener //tag는 object인 상태 이것을 형변환 해줘야함.
+            val newModel =  saveAlarmModel(                                       // as?는 형변환 실패하면 null로 떨어지게함.
+                model.hour,
+                model.minute,
+                model.onOff.not()//반전
+            )
+            renderView(newModel)
 
+            //데이터 확인을 한다.
+            if (newModel.onOff){
+                //알람이 켜진경우 -> 알람을 등록
+
+            }else{
+                //알람이 꺼진경우 -> 알람을 제거
+                    // 아래도 같은 코드가 이있음 함수로 빼도 좋다.
+                val pendingIntent = PendingIntent.getBroadcast(
+                    this,
+                    ALARM_REQUEST_CODE,
+                    Intent(this, AlarmReceiver::class.java), PendingIntent.FLAG_NO_CREATE)
+                pendingIntent?.cancel() // 알람이 없다면 null이기 때문에 널 방어
+
+            }
+
+
+        }
     }
 
     private fun initChangeAlarmTimeButton(){
@@ -45,11 +64,15 @@ class MainActivity : AppCompatActivity() {
                 { picker, hour, minute -> //타임을 지정하고 나올때 발생하는 이벤트 람다.
                     //1.데이터를 저장하고
                     val model = saveAlarmModel(hour, minute, false)
-
                     //2.View를 업데이트하고
                     renderView(model)
 
                     //3.기존에 있던 알람을 삭제하고
+                    val pendingIntent = PendingIntent.getBroadcast(
+                        this,
+                        ALARM_REQUEST_CODE,                                    //있으면 가져오고 없으면 안가져온다.
+                        Intent(this, AlarmReceiver::class.java), PendingIntent.FLAG_NO_CREATE)
+                    pendingIntent?.cancel() // 알람이 없다면 null이기 때문에 널 방어
                 },
                 calender.get(Calendar.HOUR_OF_DAY) ,
                 calender.get(Calendar.MINUTE),
@@ -65,7 +88,7 @@ class MainActivity : AppCompatActivity() {
         val model = AlarmDisplayModel(
             hour = hour,
             minute = minute,
-            onOff = false
+            onOff = onOff
         )
         val sharedPreference = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
 
@@ -89,7 +112,7 @@ class MainActivity : AppCompatActivity() {
             onOff = onOffDBValue  )
 
         //데이터 보정.
-       /* val pendingIntent = PendingIntent.getBroadcast(
+        val pendingIntent = PendingIntent.getBroadcast(
             this,
             ALARM_REQUEST_CODE,         //만들거임.                 //있으면 가져오고 없으면 안가져온다.
             Intent(this, AlarmReceiver::class.java), PendingIntent.FLAG_NO_CREATE)
@@ -100,7 +123,7 @@ class MainActivity : AppCompatActivity() {
         }else if((pendingIntent != null) and  alarmModel.onOff.not()){
             //알람은 등록되어있는데 알람데이터는 꺼져있음.-> 알람을 취소함.
             pendingIntent.cancel()
-        }*/
+        }
         return alarmModel
     }
     private fun renderView(model: AlarmDisplayModel){
